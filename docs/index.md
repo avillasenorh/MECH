@@ -1,6 +1,7 @@
-# MECH
-An implementation of Herrmann's regional focal mechanisms codes
+# Regional Focal Mechanisms
 
+This repository contains scripts to run Herrmann's focal mechanism codes
+described in Herrmann _et al._ (2011)
 
 Reference:
 

@@ -1,0 +1,18 @@
+site_name: Regional focal mechanisms
+
+nav:
+    - Home: index.md
+    - Scripts:
+        - Extract data: data.md
+        - QC data: qc.md
+        - Waveform inversion: wf.md
+        - Spectral amplitudes: spec.md
+    - Tutorials: tutorials.md
+
+theme: readthedocs
+
+extra_javascript:
+    - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+
+markdown_extensions:
+    - mdx_math

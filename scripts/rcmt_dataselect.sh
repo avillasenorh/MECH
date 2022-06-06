@@ -54,19 +54,21 @@ t_end=$( $DATE -u --date=@"$epoch_end" +%Y,%j,%H,%M,%S,%N )
 #echo $origin_time $year $jday $seconds $nanoseconds $t_start $t_end
 
 echo "Extracting data windows from SDS at $sds_dir"
-#dataselect -ts $t_start -te $t_end -lso -Pe -o extract.ms ${sds_dir}/$year/*/*/[BH]H[ZEN12].?/*.$year.$jday
+dataselect -ts $t_start -te $t_end -lso -Pe -o extract.ms ${sds_dir}/$year/*/*/[BH]H[ZEN12].?/*.$year.$jday
 
-#msi -T extract.ms > segments.list
-#segments=$( wc -l < segments.list )
+msi -T extract.ms > segments.list
+segments=$( wc -l < segments.list )
 
-#[[ $segments -eq 0 ]] && { echo "ERROR: no data segments extracted for this event"; /bin/rm -f extract.ms segments.list; exit 1; }
+[[ $segments -eq 0 ]] && { echo "ERROR: no data segments extracted for this event"; /bin/rm -f extract.ms segments.list; exit 1; }
 
-#echo "Number of segments in miniSEED file: $segments"
-#/bin/rm -f segments.list
+echo "Number of segments in miniSEED file: $segments"
+/bin/rm -f segments.list
 
-#mkdir -p DAT/MSEED DAT/RAW DAT/VEL DAT/ROT
+mkdir -p DAT/MSEED DAT/RAW DAT/VEL DAT/ROT
 
-#mv extract.ms DAT/MSEED/.
+mv extract.ms DAT/MSEED/.
+exit
+
 cd DAT/RAW
 
 echo "Converting data to SAC"

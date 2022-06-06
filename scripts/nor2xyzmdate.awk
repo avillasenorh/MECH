@@ -10,6 +10,6 @@
 	hour =   1*substr($0,12,2);
 	minute = 1*substr($0,14,2);
 	second = 1.0*substr($0,17,4);
-	printf("%9.4f %8.4f %5.1f %4.1f %04d-%02d-%02dT%02d:%02d:%05.2fd\n",
+	printf("%9.4f %8.4f %5.1f %4.1f %04d-%02d-%02dT%02d:%02d:%05.2f\n",
 	lon, lat, dep, mag, year, month, day, hour, minute, second);
 }

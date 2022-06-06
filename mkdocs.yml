@@ -3,10 +3,11 @@ site_name: Regional focal mechanisms
 nav:
     - Home: index.md
     - Scripts:
-        - Extract data: data.md
-        - QC data: qc.md
-        - Waveform inversion: wf.md
-        - Spectral amplitudes: spec.md
+        - Introduction: scripts/intro.md
+        - Extract data: scripts/data.md
+        - QC data: scripts/qc.md
+        - Waveform inversion: scripts/wf.md
+        - Spectral amplitudes: scripts/spec.md
     - Tutorials: tutorials.md
 
 theme: readthedocs

@@ -51,7 +51,7 @@ epoch_end=$( bc -l <<< "$seconds + $window + $nanoseconds / 1000000000" )
 t_start=$( $DATE -u --date=@"$epoch_start" +%Y,%j,%H,%M,%S,%N )
 t_end=$( $DATE -u --date=@"$epoch_end" +%Y,%j,%H,%M,%S,%N )
 
-#echo $origin_time $year $jday $seconds $nanoseconds $t_start $t_end
+if [[ ! -s DAT/MSEED/extract.ms ]]; then
 
 echo "Extracting data windows from SDS at $sds_dir"
 dataselect -ts $t_start -te $t_end -lso -Pe -o extract.ms ${sds_dir}/$year/*/*/[BH]H[ZEN12].?/*.$year.$jday
@@ -67,8 +67,10 @@ echo "Number of segments in miniSEED file: $segments"
 mkdir -p DAT/MSEED DAT/RAW DAT/VEL DAT/ROT
 
 mv extract.ms DAT/MSEED/.
-exit
 
+fi
+
+/bin/rm -rf DAT/???/*
 cd DAT/RAW
 
 echo "Converting data to SAC"
@@ -133,8 +135,7 @@ done
 echo "Removing instrument response"
 /bin/rm -f transfer.log
 touch transfer.log
-#for sacfile in *.SAC; do
-for sacfile in ES.*.SAC; do
+for sacfile in *.SAC; do
 
     IFS="." read -r network station location channel quality oyear ojday dum extension <<< "$sacfile"
 
@@ -145,18 +146,27 @@ for sacfile in ES.*.SAC; do
     delta=$( saclhdr -DELTA $sacfile )
     fhh=$( bc -l <<< "0.50 / $delta" )
     fhl=$( bc -l <<< "0.25 / $delta" )
+    set +e
     evalresp $station $channel $year $jday 0.001 $fhh 2049 -u 'vel' -f $respfile
+    status=$?
+    set -e
+    if [[ $status -ne 0 ]]; then
+        echo "Error status = $status"
+        continue
+    fi
 
     amp_file=AMP.${network}.${station}.${location}.${channel}
     phase_file=PHASE.${network}.${station}.${location}.${channel}
 
     if [[ -s $amp_file && -s $phase_file ]]; then
+        set +e
         gsac << EOF >> transfer.log
         read $sacfile
         rtr
         transfer from eval subtype $amp_file $phase_file TO NONE FREQLIMITS 0.002 0.004 $fhl $fhh
         w ../VEL/${station}.${channel}.${network}.${location}.SAC
         quit
+        set -e
 EOF
     else
       echo "ERROR: evalresp did not produce AMP and PHASE file for $sacfile"
@@ -194,7 +204,7 @@ for sacfile in *.SAC; do
     a=$( time96 -M $model_file -P -GCARC $gcarc -EVDP $evdp )
     t0=$( time96 -M $model_file -SH -GCARC $gcarc -EVDP $evdp )
 
-    gsac << EOF
+    gsac << EOF > /dev/null
     r $sacfile
     synchronize o
     rtr
@@ -218,7 +228,7 @@ for sacfile1 in *.*HE.*.SAC; do
 
     [[ ! -s $sacfile2 ]] && { echo "WARNING: no N component for $sacfile1"; continue; }
 
-    gsac << EOF
+    gsac << EOF > /dev/null
     r $sacfile2 $sacfile1
     rotate to gc
     w ../ROT/${station}${network}${location}${chn}R ../ROT/${station}${network}${location}${chn}T

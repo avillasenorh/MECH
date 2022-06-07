@@ -33,12 +33,15 @@ curdir=$PWD
 # check environmental variables
 model_file=${GREENDIR}/Models/${vmodel}.mod
 
+/bin/rm -f depths.list
+touch depths.list
 for depth in $( seq $depth_min $depth_step $depth_max ); do
-
     sdepth=$( printf "%03d0\n" $depth )
-    rcmt_run_depth.sh $sdepth $parfile
-
+    echo $sdepth >> depths.list
 done
+
+parallel -j 50% -a depths.list rcmt_run_depth.sh {1} $parfile
+/bin/rm -f depths.list
 
 cd REG/GRD
 cat [0-9]???/fmdfit.dat | tee > fmdfit.sum

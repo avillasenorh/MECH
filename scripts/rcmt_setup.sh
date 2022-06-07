@@ -20,6 +20,8 @@ echo $evname
 [[ -d $evname ]] && { echo "ERROR: event directory already exists: $evname"; exit 1; }
 
 mkdir -p $evname $evname/LOC $evname/DAT $evname/REG
+mkdir -p $evname/DAT/RAW $evname/DAT/VEL $evname/DAT/ROT
+mkdir -p $evname/REG/DAT $evname/REG/GRD
 
 /bin/cp -v $parfile $evname/.
 ~/devel/MECH/scripts/nor2xyzmdate.awk $sfile > $evname/location.xyzmdate

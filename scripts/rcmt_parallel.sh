@@ -40,7 +40,7 @@ for depth in $( seq $depth_min $depth_step $depth_max ); do
     echo $sdepth >> depths.list
 done
 
-parallel -j 50% -a depths.list rcmt_run_depth.sh {1} $parfile
+parallel -j 70% -a depths.list rcmt_run_depth.sh {1} $parfile
 /bin/rm -f depths.list
 
 cd REG/GRD

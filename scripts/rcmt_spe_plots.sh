@@ -143,14 +143,55 @@ surf96 39
 
 # Create stations list
 /bin/rm -f station.list
-awk '{print $19, $20}' $data_file | sort -u > station.list
+awk '{printf("%-6s %-3s %8.2f %6.1f\n", $19, $20, $8, $9)}' $data_file | sort -u > station.list
 
-while read -r station channel; do
+while read -r station channel distance azimuth; do
 
     chn=${channel:0:2}
     echo $station $channel $chn
+    /bin/rm -f junkr junkl
+
+    sdpspc96 -X0 5.0 -XLEN 3.0 -YLEN 5 -PATH $eigen -R -DIP $dip -RAKE $rake -STK $strike \
+        -DIST $norm_distance -PER -HS $depth -M $mode -MW $Mw2 -O $data_file -STA $station -COMP ${chn}Z >  junkr
+
+    amplitude_max_Rayleigh=$( grep ampmax junkr | awk '{print $5}' )
+
+    sdpspc96 -X0 1.0 -XLEN 3.0 -YLEN 5 -PATH $eigen -L -DIP $dip -RAKE $rake -STK $strike \
+        -DIST $norm_distance -PER -HS $depth -M $mode -MW $Mw2 -O $data_file -STA $station -COMP ${chn}T > junkl
+
+    amplitude_max_Love=$( grep ampmax junkl | awk '{print $5}' )
+
+    echo "Maximum amplitudes: $amplitude_max_Rayleigh $amplitude_max_Love"
+
+    sdpspc96 -X0 5.0 -XLEN 3.0 -YLEN 5 -PATH $eigen -R -DIP $dip -RAKE $rake -STK $strike \
+        -DIST $norm_distance -PER -HS $depth -M $mode -MW $Mw2 -O $data_file -STA $station -COMP ${chn}Z \
+        -YMAX $amplitude_max_Rayleigh >  junkr
+    sdpspc96 -X0 1.0 -XLEN 3.0 -YLEN 5 -PATH $eigen -L -DIP $dip -RAKE $rake -STK $strike \
+        -DIST $norm_distance -PER -HS $depth -M $mode -MW $Mw2 -O $data_file -STA $station -COMP ${chn}T \
+        -YMAX $amplitude_max_Love > junkl
 
 
+    cat SSPCL.PLT SSPCR.PLT | reframe -N1 -O -YL+500 > TEMP.PLT
+    calplt << EOF
+NEWPEN
+1
+LEFT
+3.0 6.5 0.20 'Love' 0.0
+LEFT
+7.0 6.5 0.20 'Rayl' 0.0
+LEFT
+1.25 2.0 0.15 '$station' 0.0
+LEFT
+1.25 1.8 0.15 'Az=$azimuth' 0.0
+LEFT
+1.25 1.6 0.15 'Dist=$distance' 0.0
+LEFT
+1.25 1.4 0.15 'Norm=$norm_distance' 0.0
+PEND
+EOF
 
+    cat TEMP.PLT CALPLT.PLT > $station.plt
+    plotnps -K  -F7 -W10 -EPS < $station.plt > $station.eps
+    /bin/rm -f junkr junkl CALPLT.cmd CALPLT.PLT SSPCL.PLT SSPCR.PLT TEMP.PLT $station.plt
 
 done < station.list

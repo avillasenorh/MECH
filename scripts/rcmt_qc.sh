@@ -12,8 +12,12 @@ set -e # stop on error
 set -u # error if variable undefined
 set -o pipefail
 
-#progname=${0##*/}
-#[[ $# -ne 2 ]] && { echo "usage: $progname argument1 argument2"; exit 1; }
+progname=${0##*/}
+[[ $# -ne 1 ]] && { echo "usage: $progname parameter_file"; exit 1; }
+
+[[ ! -s $1 ]] && { echo "ERROR: parameter file does not exist: $2"; exit 1; }
+parfile=$1
+source $parfile
 
 curdir=$PWD
 [[ -d DAT/ROT ]] && cd DAT/ROT
@@ -34,8 +38,8 @@ cut off
 sort up dist
 rtr
 taper w 0.05
-hp c 0.03 n 3
-lp c 0.06 n 3
+hp c $fhighpass n 3
+lp c $flowpass n 3
 #br c 0.12 0.25 n 4 p 2
 qdp 10
 ppk q relative perplot 3

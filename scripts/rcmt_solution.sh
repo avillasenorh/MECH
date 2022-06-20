@@ -44,16 +44,6 @@ cd REG/GRD
 cat [0-9]???/fmdfit.dat | tee > fmdfit.sum
 
 sort -nr -k7 fmdfit.sum | head -1 > fmdfit.best
-read -r code best_depth strike dip rake Mw fit < fmdfit.best
-sdepth=$( echo $best_depth | awk '{printf("%04d", 10*$1)}' )
-
-fmplot -FMPLMN -P -S $strike -D $dip -R $rake
-plotnps -BGFILL -F7 -EPS -S0.5 < FMPLOT.PLT > FMPLOT.PS
-convert -trim -colorspace RGB FMPLOT.PS wfmplot.png
-
-[[ ! -d $sdepth ]] && { echo "ERROR: directory with best solution does not exist: $sdepth"; exit 1; }
-
-cd $sdepth
-rcmt_delays.sh
+cat fmdfit.best
 
 cd $curdir

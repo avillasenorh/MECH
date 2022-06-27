@@ -176,6 +176,9 @@ for sacfile in *.SAC; do
     depmax=$( saclhdr -DEPMAX $sacfile )
     depmim=$( saclhdr -DEPMIN $sacfile )
 
+    dist_undef=$( bc -l <<< "$gcarc < 0.0" )
+    [[ $dist_undef -eq 1 ]] && { echo "WARNING: no coordinates for this file: $sacfile"; continue; }
+
     ans=$( echo $depmax $minamp $maxamp | awk '{if ($1 < $2 || $1 > $3) {print "NO"} else {print "YES"}}' )
 
     if [[ $ans == "NO" ]]; then

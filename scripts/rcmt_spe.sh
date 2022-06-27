@@ -26,7 +26,7 @@ eigen=${GREENDIR}/${vmodel}.REG/SW/
 
 curdir=$PWD
 [[ ! -d SPE ]] && { echo "ERROR: directory for spectral amplitude inversion does not exist: SPE"; exit 1; }
-[[ ! -d SPE/DISP ]] && { echo "ERROR: data directory with spectral amplitudes does not exist: SPE/DISP"; exit 1; }
+#[[ ! -d SPE/DISP ]] && { echo "ERROR: data directory with spectral amplitudes does not exist: SPE/DISP"; exit 1; }
 [[ ! -d SPE/GRD ]] && mkdir -p SPE/GRD
 
 cd SPE/GRD

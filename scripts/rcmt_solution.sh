@@ -28,7 +28,17 @@ source $parfile
 curdir=$PWD
 [[ ! -d REG ]] && { echo "ERROR: directory for RCMT inversion does not exist: REG"; exit 1; }
 [[ ! -d REG/DAT ]] && { echo "ERROR: data directory for RCMT does not exist: REG/DAT"; exit 1; }
-[[ ! -d REG/GRD ]] && mkdir -p REG/GRD
+
+( /bin/ls -1 REG/DAT/*[ZRT] > files.list 2> /dev/null )
+nfiles=$( cat files.list | wc -l )
+
+[[ $nfiles -eq 0 ]] && { echo "ERROR: no SAC files for this event"; /bin/rm -f files.list; exit 1; }
+
+echo "Number of seismograms for this event: $nfiles"
+/bin/rm -f files.list
+
+[[ -d REG/GRD ]] && { echo "Removing existing solution in REG/GRD"; /bin/rm -rf REG/GRD; }
+mkdir -p REG/GRD
 
 # check environmental variables
 model_file=${GREENDIR}/Models/${vmodel}.mod

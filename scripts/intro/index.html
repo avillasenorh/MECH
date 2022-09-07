@@ -46,8 +46,9 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <p class="caption"><span class="caption-text">Home</span></p>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../..">Index</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Scripts</span></p>
@@ -65,8 +66,9 @@
                     <li class="toctree-l1"><a class="reference internal" href="../spec/">Spectral amplitudes</a>
                     </li>
                 </ul>
+                <p class="caption"><span class="caption-text">Tutorials</span></p>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Data from SDS</a>
                     </li>
                 </ul>
       </div>
@@ -115,23 +117,54 @@ ones are:</p>
   now there is only one version of the scripts that works for all events.</li>
 <li>Processing parameters are stored in a single parameter file that can be
   adjusted for each event.</li>
-<li>Event hypocenter and origin time are read from a location file that is
-  stored at the top level of the event directory</li>
-<li>The scripts are writen in <code>bash</code> shell, instead of the Bourne shell (<code>sh</code>)
-  as the original one. This means that more powerful features can be used
-  (for example conditionals using <code>[[ ]]</code>, etc cetera).</li>
+<li>Event hypocenter and origin time are read from a file that is
+  stored at the top level of the event directory.</li>
+<li>The scripts are writen in <code>bash</code> shell, instead of the Bourne shell (<code>sh</code>).
+  This was done in order to use more powerful features (for example conditionals
+  using <code>[[ ]]</code>, etc cetera), resulting in shorter, more compact scripts.</li>
+<li>When possible we have used the shell tool GNU <a href="https://www.gnu.org/software/parallel/">parallel</a>
+  in order to speed up scripts that perform grid search and can be safely
+  run in parallel.</li>
 </ul>
-<p>The basic processing now consists of 4 steps.</p>
-<ol>
-<li>Creating the event directories containing a location and a parameter file</li>
-<li>Data extraction</li>
-<li>Data selection/QC</li>
-<li>Inversion</li>
-</ol>
-<p>This can be accomplished running the following scripts:</p>
-<pre><code>$ rcmt_dataselect.sh location_file parameter_file  # extracts data from an SDS
-$ rcm_qc.sh                                        # requires input from user
-$ rcmt_solution.sh                                 # runs grid search for best solution
+<p>The data processing involves first extracting the waveform data, metadata,
+and organizing them in directories. This can be divided in the following steps:</p>
+<ul>
+<li>Setting up the event directories</li>
+<li>Data extraction (from disk or from data centers)</li>
+<li>Data pre-processing (conversion to velocity, rotation)</li>
+</ul>
+<p>To obtain focal mechanisms using time-domain waveform inversion the following steps
+are needed:</p>
+<ul>
+<li>Visual data selection of waveforms with good signal-to-noise ratio</li>
+<li>Inversion/grid search for the best mechanism</li>
+<li>Plotting the results</li>
+</ul>
+<p>Finally, to obtain focal mechanisms using inversion of spectral amplitudes of Rayleigh and Love
+wave:</p>
+<ul>
+<li>Measure group velocities and spectral amplitudes of surface waves</li>
+<li>Inversion/grid search for the best mechanism</li>
+<li>Plotting the results</li>
+</ul>
+<p>This process can be accomplished running the following scripts:</p>
+<pre><code># Pre-processing
+$ rcmt_setup.sh S-file parameter_file                 # creates event directories
+$ rcmt_dataselect.sh location_file parameter_file     # extracts data from an SDS into a miniSEED file
+$ rcmt_unpack_mseed.sh location_file parameter_file   # creates SAC files, converts to velocity and rotates
+
+# Time domain full-waveform inversion
+$ rcmt_qc.sh parameter_file                           # manually select waveforms for inversion
+$ rcmt_solution.sh location_file parameter_file       # runs grid search for best solution
+$ rcmt_plots.sh parameter_file                        # plot results
+
+# Surface wave spectral amplitude inversion
+$ do_mft -G .../ROT/*Z                                # measure Rayleigh wave dispersion and spectral amplitudes
+$ do_mft -G .../ROT/*T                                # measure Love wave dispersion and spectral amplitudes
+$ cat *.dsp ../GRD/ALL.DSP                            # create input file for inversion
+$ rcmt_spe.sh parameter_file                          # runs grid search for best solution
+$ rcmt_spe_plots.sh parameter_file                            # plot results
+
 </code></pre>
               
             </div>
@@ -143,7 +176,7 @@ $ rcmt_solution.sh                                 # runs grid search for best s
         <a href="../data/" class="btn btn-neutral float-right" title="Extract data">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../.." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../.." class="btn btn-neutral" title="Index"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   

@@ -65,8 +65,26 @@ for sacfile in $curdir/$datadir/*H[ZRT]; do
     ctl_file=${GREENDIR}/${vmodel}.REG/${sdepth}/W.CTL
     [[ ! -s $ctl_file ]] && { echo "ERROR: CTL file does not exist for $sdepth"; exit 1; }
 
-    awk '{d = dist - $1; if (d < 0.0) d=-d; printf("%s %8.4f %8d %12.2f\n", $7, $2, $1, d)}' \
-    dist=$distance $ctl_file | sort -n -k4 | head -1 > ${station}.dist
+    echo $distance | cat - $ctl_file | \
+    awk '{if (NR == 1) {d = $1;} else {dd = sqrt((d-$1)*(d-$1)); printf("%s %8.4f %8d %12.2f\n", $7, $2, $1, dd)}}' | \
+    sort -n -k4 | head -1 > ${station}.dist
+
+#   /bin/rm -f diff.out
+#   touch diff.out
+#   while read -r gf_dist delta npts val1 val2 str1 str2; do
+#       dist_diff=$( bc -l <<< "sqrt( ($gf_dist - $distance) * ($gf_dist - $distance) )" )
+#       echo $dist_diff >> diff.out
+#   done < $ctl_file
+#   nl1=$( cat $ctl_file | wc -l )
+#   nl2=$( cat diff.out | wc -l )
+#   [[ $nl1 -ne $nl2 ]] && { echo "ERROR: CTL and difference file have different sizes: $nl1 $nl2"; continue; }
+
+#   paste -d" " $ctl_file diff.out | sort -n -k8 | \
+#   awk '(NR == 1) {printf("%s %8.4f %8d %12.2f\n", $7, $2, $1, $8)}' > ${station}.dist
+#   /bin/rm -f diff.out
+
+#   awk '{d = dist - $1; if (d < 0.0) d=-d; printf("%s %8.4f %8d %12.2f\n", $7, $2, $1, d)}' \
+#   dist=$distance $ctl_file | sort -n -k4 | head -1 > ${station}.dist
 
     # calculate distance weight and create input file for wvfgrd96
     wt=$( echo $distance $dref | awk '{if ($1 < $2) print $1/$2; else print $2/$1;}' )

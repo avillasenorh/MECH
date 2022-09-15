@@ -34,7 +34,7 @@ read -r code best_depth strike dip rake Mw fit < fmdfit.best
 
 fmplot -FMPLMN -P -S $strike -D $dip -R $rake
 plotnps -BGFILL -F7 -EPS -S0.5 < FMPLOT.PLT > fmplot.eps
-convert -trim -colorspace RGB fmplot.eps fmplot.png
+#convert -trim -colorspace RGB fmplot.eps fmplot.png
 
 /bin/rm -f FMPLOT.PLT LUNE.PLT
 
@@ -42,7 +42,7 @@ convert -trim -colorspace RGB fmplot.eps fmplot.png
 
 fmdfit -HMN 0 -HMX 30 -MECH < fmdfit.sum    # 30 hardwired - can be read from parameter file
 plotnps -BGFILL -K -EPS -F7 -W10 < FMDFIT.PLT > fmdfit.eps
-convert  -trim fmdfit.eps -background white -alpha remove -alpha off  fmdfit.png
+#convert  -trim fmdfit.eps -background white -alpha remove -alpha off  fmdfit.png
 
 /bin/rm -f FMDFIT.PLT
 
@@ -120,9 +120,8 @@ done < station.list
 /bin/rm -f stadepth.list station.list
 
 plotnps -K -EPS -F7 -W10 < CMP1.PLT > cmp1.eps
-gm convert +matte -trim cmp1.eps cmp1.png
-
-cp cmp1.png cmp1.eps ../.
+#gm convert +matte -trim cmp1.eps cmp1.png
+#cp cmp1.png cmp1.eps ../.
 
 /bin/rm -f PLTSAC.PLT CMP1.PLT
 
@@ -215,8 +214,8 @@ EOF
 
 cat CALPLT.PLT >> GENPLT.PLT
 plotnps -BGFILL -F7 -W10 -EPS -K < GENPLT.PLT >  delay.eps
-convert -trim delay.eps -background white -alpha remove -alpha off  delay.png
-cp delay.eps delay.png ../.
+#convert -trim delay.eps -background white -alpha remove -alpha off  delay.png
+#cp delay.eps delay.png ../.
 
 /bin/rm -f CALPLT.PLT GENPLT.PLT CALPLT.cmd
 /bin/rm -f cmdfil cosoff.dat ?.dist ?.dat

@@ -11,7 +11,7 @@
 #: Options     : none
 set -e # stop on error
 set -u # error if variable undefined
-set -o pipefail
+#set -o pipefail  # commented out because it makes script to stop in Linux systems
 
 progname=${0##*/}
 [[ $# -ne 2 ]] && { echo "usage: $progname depth_string parameter_file"; exit 1; }
@@ -65,6 +65,7 @@ for sacfile in $curdir/$datadir/*H[ZRT]; do
     ctl_file=${GREENDIR}/${vmodel}.REG/${sdepth}/W.CTL
     [[ ! -s $ctl_file ]] && { echo "ERROR: CTL file does not exist for $sdepth"; exit 1; }
 
+#   NOTE: this pipep commands fail in Linux when setting "set -o pipefail" (although it seems to work!?)
     echo $distance | cat - $ctl_file | \
     awk '{if (NR == 1) {d = $1;} else {dd = sqrt((d-$1)*(d-$1)); printf("%s %8.4f %8d %12.2f\n", $7, $2, $1, dd)}}' | \
     sort -n -k4 | head -1 > ${station}.dist

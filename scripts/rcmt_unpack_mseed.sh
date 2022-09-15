@@ -48,6 +48,7 @@ cd DAT/TMP
 echo "Converting data to SAC"
 mseed2sac $msfile 2> extract.log
 
+/bin/rm -f ES.ES[01][0-9]*.SAC    # removes data from Sonseca Array
 /bin/mv -n *SAC ../RAW/.
 
 find . -name "*.SAC" -print > sac.list 2> /dev/null

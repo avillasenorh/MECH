@@ -120,6 +120,7 @@ done < station.list
 /bin/rm -f stadepth.list station.list
 
 plotnps -K -EPS -F7 -W10 < CMP1.PLT > cmp1.eps
+cp cmp1.eps ../.
 #gm convert +matte -trim cmp1.eps cmp1.png
 #cp cmp1.png cmp1.eps ../.
 

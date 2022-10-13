@@ -48,7 +48,10 @@ $ rcmt_unpack_mseed.sh location_file parameter_file   # creates SAC files, conve
 
 # Time domain full-waveform inversion
 $ rcmt_qc.sh parameter_file                           # manually select waveforms for inversion
-$ rcmt_solution.sh location_file parameter_file       # runs grid search for best solution
+
+$ rcmt_solution.sh location_file parameter_file       # runs grid search for best solution sequentially
+$ rcmt_parallel.sh location_file parameter_file       # runs grid search for best solution using GNU parallel
+
 $ rcmt_plots.sh parameter_file                        # plot results
 
 # Surface wave spectral amplitude inversion

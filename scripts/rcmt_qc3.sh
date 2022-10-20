@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#: Name        : rcmt_qc.sh
+#: Name        : rcmt_qc3.sh
 #: Description : performs data qc for regional centroid moment tensor inversion (RCMT)
 #: Usage       : rcmt_qc.sh
 #: Date        : 2022-06-01
@@ -29,23 +29,55 @@ nsac=$( /bin/ls -1 *H[ZRT] | wc -l )
 
 [[ $nsac -gt 0 ]] || { echo "ERROR: no rotated SAC files in current directory: $PWD"; cd $curdir; exit 1; }
 
+/bin/rm -f list.dist
+for sacfile in *HZ; do
+
+    echo $( saclhdr -DIST $sacfile ) $sacfile >> list.dist
+
+done
+
+sort -n list.dist > list.sorted
+/bin/rm -f list.dist
+
+num_sta=0
+file_list=( )
+while read -r distance vertical; do
+
+    use=$( bc <<< "$distance > 5.0 && $distance < 600.0" )
+    [[ $use -eq 0 ]] && { echo "Skipping $vertical $distance"; continue; }
+    num_sta=$((num_sta + 1))
+    echo $num_sta
+
+    radial=${vertical::-1}R
+    transverse=${vertical::-1}T
+
+    if [[ -s $radial && -s $transverse ]]; then
+        file_list+=( $transverse )
+        file_list+=( $radial )
+        file_list+=( $vertical )
+    fi
+
+done < list.sorted
+/bin/rm -f list.sorted
+
 gsac << EOF
 fileid list fname dist az format equals concat on
 markt on
-xlim vel 3.3 -30 vel 3.3 70
-r *H[ZRT]
+xlim vel $qc_window_gv $qc_window_pre vel $qc_window_gv $qc_window_post
+r ${file_list[@]}
 cut off
 sort up dist
 rtr
-taper w 0.05
-hp c $fhighpass n 3
-lp c $flowpass n 3
+taper w $qc_taper
+hp c $qc_highpass n 3
+lp c $qc_lowpass n 3
 #br c 0.12 0.25 n 4 p 2
 qdp 10
 ppk q relative perplot 3
 wh IHDR20
 q
 EOF
+
 
 for sacfile in *H[ZRT]; do
 

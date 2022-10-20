@@ -15,7 +15,7 @@ set -o pipefail
 progname=${0##*/}
 [[ $# -ne 1 ]] && { echo "usage: $progname parameter_file"; exit 1; }
 
-[[ ! -s $1 ]] && { echo "ERROR: parameter file does not exist: $2"; exit 1; }
+[[ ! -s $1 ]] && { echo "ERROR: parameter file does not exist: $1"; exit 1; }
 parfile=$1
 source $parfile
 

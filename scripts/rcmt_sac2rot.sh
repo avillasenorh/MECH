@@ -4,13 +4,12 @@ set -euo pipefail
 progname=${0##*/}
 curdir=$PWD
 
-[[ $# -lt 2 ]] && { echo "usage: $progname location_file parameter_file"; exit 1; }
+[[ $# -ne 2 ]] && { echo "usage: $progname parameter_file location_file "; exit 1; }
+[[ ! -s $1 ]] && { echo "ERROR: parameter file does not exist: $1"; exit 1; }
+[[ ! -s $2 ]] && { echo "ERROR: location file does not exist: $2"; exit 1; }
 
-[[ ! -s $1 ]] && { echo "ERROR: location file does not exist: $1"; exit 1; }
-locfile=$1
-
-[[ ! -s $2 ]] && { echo "ERROR: parameter file does not exist: $2"; exit 1; }
-source $2
+source $1
+locfile=$2
 
 [[ ! -d DAT/RAW ]] && { echo "ERROR: no data directory with SAC files: DAT/RAW"; exit 1; }
 

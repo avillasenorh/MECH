@@ -40,5 +40,5 @@ srfgrd96 -N2 -PATH ${eigen} -O ${data_file} \
     -DMN ${dip_min}    -DMX ${dip_max}    -DD ${dip_step} \
     -RMN ${rake_min}   -RMX ${rake_max}   -DR ${rake_step} \
     -SMN ${strike_min} -SMX ${strike_max} -DS ${strike_step} \
-    -HMN ${depth_min}  -HMX ${depth_max}  -DH ${depth_step} \
+    -HMN ${spe_depth_min}  -HMX ${spe_depth_max}  -DH ${spe_depth_step} \
     -FMIN ${fit_min}   -PMN ${period_min} 

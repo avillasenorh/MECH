@@ -16,14 +16,13 @@ set -u # error if variable undefined
 set -o pipefail
 
 progname=${0##*/}
-[[ $# -ne 2 ]] && { echo "usage: $progname location_file parameter_file"; exit 1; }
 
-[[ ! -s $1 ]] && { echo "ERROR: location file does not exist: $1"; exit 1; }
-locfile=$1
+[[ $# -ne 2 ]] && { echo "usage: $progname parameter_file location_file "; exit 1; }
+[[ ! -s $1 ]] && { echo "ERROR: parameter file does not exist: $1"; exit 1; }
+[[ ! -s $2 ]] && { echo "ERROR: location file does not exist: $2"; exit 1; }
 
-[[ ! -s $2 ]] && { echo "ERROR: parameter file does not exist: $2"; exit 1; }
-parfile=$2
-source $parfile
+source $1
+locfile=$2
 
 curdir=$PWD
 [[ ! -d REG ]] && { echo "ERROR: directory for RCMT inversion does not exist: REG"; exit 1; }

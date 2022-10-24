@@ -75,7 +75,7 @@ plotnps -K -F7 -W10 -EPS < FMMFIT.PLT > fmmfit.eps
 # Plot best mechanism for grid search in depth
 echo "Plotting best mechanism as a function of depth"
 /bin/rm -f FMDFIT.PLT fmdfit.eps
-fmdfit -HMN 0 -HMX 30 -MECH < fmdfit.dat
+fmdfit -HMN 0 -HMX $spe_depth_max -MECH < fmdfit.dat
 plotnps -K -F7 -W10 -EPS < FMDFIT.PLT > fmdfit.eps
 
 /bin/rm -f FMMFIT.PLT FMDFIT.PLT

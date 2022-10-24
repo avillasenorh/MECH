@@ -40,7 +40,7 @@ plotnps -BGFILL -F7 -EPS -S0.5 < FMPLOT.PLT > fmplot.eps
 
 # 2. Plot mechanisms as a function of depth
 
-fmdfit -HMN 0 -HMX 30 -MECH < fmdfit.sum    # 30 hardwired - can be read from parameter file
+fmdfit -HMN 0 -HMX $depth_max -MECH < fmdfit.sum
 plotnps -BGFILL -K -EPS -F7 -W10 < FMDFIT.PLT > fmdfit.eps
 #convert  -trim fmdfit.eps -background white -alpha remove -alpha off  fmdfit.png
 

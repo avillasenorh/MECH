@@ -106,6 +106,8 @@ for sacfile in $curdir/$datadir/*H[ZRT]; do
                 cuth=$( bc -l <<< "$distance / $vel + $te" )
                 echo "cut o $cutl o $cuth" >> cut_green.m
             else
+                cutl=-$tb
+                cuth=$( bc -l <<< "$distance / $vel + $te" )
                 echo "cut a $cutl a $cuth" >> cut_green.m
             fi
             echo "r ${station}.${grn}" >> cut_green.m

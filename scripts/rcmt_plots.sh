@@ -23,6 +23,9 @@ curdir=$PWD
 [[ ! -d REG ]] && { echo "ERROR: directory for waveform inversion does not exist: REG"; exit 1; }
 [[ ! -d REG/GRD ]] && { echo "ERROR: directory with waveform inversion results does not exist: REG/GRD"; exit 1; }
 
+rcmt_sta_map.sh
+/bin/mv sta_map.ps REG/GRD/.
+
 cd REG/GRD
 
 [[ ! -s fmdfit.sum ]] && { echo "ERROR: file with grid search summary does not exist: fmdfit.sum"; exit 1; }

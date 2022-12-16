@@ -21,8 +21,10 @@ progname=${0##*/}
 [[ ! -s $1 ]] && { echo "ERROR: parameter file does not exist: $1"; exit 1; }
 [[ ! -s $2 ]] && { echo "ERROR: location file does not exist: $2"; exit 1; }
 
-source $1
+parfile=$1
 locfile=$2
+
+source $parfile
 
 curdir=$PWD
 [[ ! -d REG ]] && { echo "ERROR: directory for RCMT inversion does not exist: REG"; exit 1; }

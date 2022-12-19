@@ -46,7 +46,6 @@ while read -r distance vertical; do
     use=$( bc <<< "$distance > 5.0 && $distance < 600.0" )
     [[ $use -eq 0 ]] && { echo "Skipping $vertical $distance"; continue; }
     num_sta=$((num_sta + 1))
-    echo $num_sta
 
     radial=${vertical::-1}R
     transverse=${vertical::-1}T
@@ -60,11 +59,14 @@ while read -r distance vertical; do
 done < list.sorted
 /bin/rm -f list.sorted
 
+echo ${file_list[@]}
+
+#fileid list fname dist az format equals concat on
 gsac << EOF
-fileid list fname dist az format equals concat on
+fileid list fname dist az
 markt on
 xlim vel $qc_window_gv $qc_window_pre vel $qc_window_gv $qc_window_post
-r ${file_list[@]}
+read ${file_list[@]}
 cut off
 sort up dist
 rtr

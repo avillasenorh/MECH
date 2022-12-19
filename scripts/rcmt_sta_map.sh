@@ -35,6 +35,7 @@ curdir=$PWD
 [[ -d REG/DAT/NOUSE ]] && ( /bin/ls -1 REG/DAT/NOUSE/*[ZRT] > bad.list 2> /dev/null )
 
 for dataset in raw vel dat bad; do
+    [[ ! -e $dataset.list || ! -s $dataset.list ]] && { /bin/rm -f $dataset.list; continue; }
     /bin/rm -f $dataset.xy
     touch $dataset.xy
     i=0
@@ -85,3 +86,4 @@ gmt psxy -R -J -T -O >> $psfile
 
 cd $curdir
 /bin/rm -f raw.list vel.list dat.list bad.list
+/bin/rm -f raw.xy vel.xy dat.xy bad.xy gmt.history

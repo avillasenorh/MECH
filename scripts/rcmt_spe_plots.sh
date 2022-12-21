@@ -43,6 +43,8 @@ read -r code depth strike dip rake dum1 dum2 Mw1 Mw2 fit <<< $( sort -nr -k10 fm
 
 
 # Plot distribution of P axis for best mechanisms for best depth (and "lune" plot)
+# WARNING!!!!! This only works if depth step is equal to 1!!!!!!
+# SRFGRD96   40.0    50    10     0 0.849 0.951  -1.80  -1.67 0.5316
 echo "Plotting distribution of P axis for best depth"
 fitfile=$( printf "fmfit%03d.dat" ${depth%%.*} )
 [[ ! -s $fitfile ]] && { echo "ERROR: file with summary for best depth does not exist: $fitfile"; exit 1; }

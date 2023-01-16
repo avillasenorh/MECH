@@ -95,7 +95,8 @@ for sacfile in *.SAC; do
         cmpaz=90.0
     else
         echo "WARNING: cannot handle this case yet: ${network}.${station}.${channel}"
-        continue
+        cmpinc=90.0
+        cmpaz="undef"
     fi
 
     gsac << EOF > /dev/null

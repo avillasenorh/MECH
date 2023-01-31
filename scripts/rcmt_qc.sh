@@ -40,7 +40,7 @@ rtr
 taper w 0.05
 hp c $fhighpass n 3
 lp c $flowpass n 3
-#br c 0.12 0.25 n 4 p 2
+br c 0.12 0.25 n 4 p 2
 qdp 10
 ppk q relative perplot 3
 wh IHDR20

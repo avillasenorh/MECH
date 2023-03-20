@@ -12,7 +12,8 @@ sfile=$1
 [[ ! -s $2 ]] && { echo "ERROR: parameter file does not exist: $2"; exit 1; }
 parfile=$2
 
-evname=$( ~/devel/MECH/scripts/nor2evname.awk $sfile )
+#evname=$( ~/devel/MECH/scripts/nor2evname.awk $sfile )
+evname=$( awk '/I$/ {print substr($0,61,14)}' $sfile )
 
 [[ -z $evname ]] && { echo "ERROR: invalid directory name for $sfile"; exit 1; }
 echo $evname

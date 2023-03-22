@@ -109,8 +109,9 @@ awk '{if ($0 ~ /^ STAT SP IPHASW/) {printf(" %-78s6\n",file); print $0} else {pr
 
 # modifiy S-file to add component from extract.ms
 
-nor_addchn << END > ${sfile} 2> channel_not_found.list
+nor_addchn << END 2> channel_not_found.list
 sfile.tmp
+$sfile
 sta_chan.list
 END
 

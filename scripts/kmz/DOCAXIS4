@@ -1,0 +1,188 @@
+#!/bin/sh
+set -x
+
+# and then the convert converts the true white to transparent
+
+
+#####
+#    compile the program regime
+#####
+
+gfortran regime.f -o regime
+
+#####
+#    define a unique name for the kmz file
+#####
+REGION="eucaxis4"
+
+#####
+#	Mech.list
+#19620202_064334  36.37  -89.51   7.5 4.23 350 84  145 JGR79
+#####
+
+
+cat Mech.list    > m.list
+
+#####
+#   this is for the focal mechanism image
+#####
+PROJ="x2.5/2.5"
+LATLON="-2.5/2.5/-2.5/2.5"
+
+
+gmtset BASEMAP_TYPE FANCY  D_FORMAT %.2f PLOT_DEGREE_FORMAT D OUTPUT_DEGREE_FORMAT +D  MEASURE_UNIT cm
+
+
+
+
+cat > head << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+  <Document>
+  <name> Regional Caxis from Moment Tensor Solutions </name>
+    <open>1</open>
+<LookAt><longitude>10.0</longitude><latitude>40.0</latitude><altitude>0</altitude><range>7500000</range><tilt>0</tilt><heading>0</heading></LookAt>
+
+	<Folder>
+EOF
+
+
+rm -f body
+
+while read YEARDATE LAT LON H MW STK DIP RAKE CITATION
+do
+echo $YEARDATE $CITATION
+FNAME="${YEARDATE}C.eps"
+#####
+#       ALT attempt for 3-D plot
+#       SIZE scaling for magnitude 0 -> 0  8 -> 1
+#       HH integer version of depth for color map
+#####
+ALT=`echo $H | awk '{printf "%d",10000*$1}' `
+# this was originally here to scale the beachball size with Mw
+# for the Compressive axis plot this is not done
+#SCALE=`echo ${MW} | awk '{print 1.0*($1 - 0.0)/(8.0 - 0.0) }' `
+SCALE=1.0
+HH=`echo $H | awk '{printf "%d",$1}' `
+
+
+#####
+#   for maps we need LAT LON but here GoogleEarth handles the placement
+#    so set LAT = 0 LON = 0
+echo 0.0 0.0  $H $STK $DIP $RAKE  | regime > lunk
+
+grep Regime lunk | grep -v XX > t
+rm -f red green blue
+#####
+#    to plot the we will separate by the color combinations of the first and second part of the vector
+#####
+#       FIRST RED NF NS
+#####
+grep NF t  |  awk '{print $3, $4, $6, 2.0 }' >> red
+grep NS t  |  awk '{print $3, $4, $6, 2.0 }' >> red
+#####
+#       FIRST GREEN SS
+#####
+grep SS t  |  awk '{print $3, $4, $6, 2.0 }' >> green
+#####
+#       FIRST BLUE TS TF
+#####
+grep TS t  |  awk '{print $3, $4, $6, 2.0 }' >> blue
+grep TF t  |  awk '{print $3, $4, $6, 2.0 }' >> blue
+#####
+#       SECOND RED NF
+#####
+grep NF t  |  awk '{print $3, $4, ($6 +180), 2.0 }' >> red
+#####
+#       SECOND GREEN SS NS
+#####
+grep SS t  |  awk '{print $3, $4, ($6 +180), 2.0 }' >> green
+grep NS t  |  awk '{print $3, $4, ($6 +180), 2.0 }' >> green
+grep TS t  |  awk '{print $3, $4, ($6 +180), 2.0 }' >> green
+#####
+#       SECOND BLUE TF 
+#####
+grep TF t  |  awk '{print $3, $4, ($6+180), 2.0 }' >> blue
+
+ls -l red green blue
+wc red green blue
+
+psxy -P -J${PROJ} -R${LATLON}    -: -SV0.40c/0.0c/0.0c -W3.8,254/254/254 -G255/0/0 -V  -K < red   >  ${FNAME}
+psxy -P -J${PROJ} -R${LATLON} -O -: -SV0.40c/0.0c/0.0c -W3.8,254/254/254 -G0/255/0 -V  -K < green >> ${FNAME}
+psxy -P -J${PROJ} -R${LATLON} -O -: -SV0.40c/0.0c/0.0c -W3.8,254/254/254 -G0/0/255 -V     < blue  >> ${FNAME}
+
+
+convert -trim  ${FNAME} -transparent "#FFFFFF" ${YEARDATE}C.png
+cat >> body << EOF
+<Style id="active-${YEARDATE}">
+        <IconStyle>
+          <scale>${SCALE}</scale>
+          <Icon><href>${YEARDATE}C.png</href></Icon>
+        </IconStyle>
+        <LabelStyle><scale>1</scale></LabelStyle>
+     </Style>
+<Style id="inactive-${YEARDATE}">
+        <IconStyle>
+          <scale>${SCALE}</scale>
+          <Icon><href>${YEARDATE}C.png</href></Icon>
+        </IconStyle>
+        <LabelStyle><scale>0</scale></LabelStyle>
+     </Style>
+  <StyleMap id="${YEARDATE}">
+    <Pair><key>normal</key><styleUrl>#inactive-${YEARDATE}</styleUrl></Pair>
+    <Pair><key>highlight</key><styleUrl>#active-${YEARDATE}</styleUrl></Pair>
+  </StyleMap>
+
+<Placemark>
+          <name>${YEARDATE}</name>
+          <Snippet maxLines="0"></Snippet>
+          <description><![CDATA[<font face="Georgia" size="4"><table width="350" cellpadding="2" cellspacing="3">
+               <tr><th align="right">Date Time Code </th><td>${YEARDATE}</td></tr>
+               <tr><th align="right">Location </th><td>${LAT} ${LON} </td></tr>
+               <tr><th align="right">H (km) </th><td>${H} </td></tr>
+               <tr><th align="right">Mw </th><td>${MW} </td></tr>
+               <tr><th align="right">Strike </th><td>${STK}</td></tr>
+               <tr><th align="right">Dip </th><td>${DIP}</td></tr>
+               <tr><th align="right">Rake </th><td>${RAKE}</td></tr>
+               <tr><th align="right">Citation </th><td>${CITATION}</td></tr>
+               <tr><th align="right">Web Site </th><td>http://www.eas.slu.edu/eqc/eqc_mt/MECH.EU/index.html</td></tr>
+               </table></font>]]></description>
+          <LookAt>
+            <latitude>${LAT}</latitude>
+            <longitude>${LON}</longitude>
+            <altitude>0</altitude>
+            <range>50000</range>
+            <tilt>0</tilt>
+            <heading>0</heading>
+          </LookAt>
+           <styleUrl>#${YEARDATE}</styleUrl>
+          <Point><coordinates>${LON},${LAT},0</coordinates></Point>
+        </Placemark>
+
+EOF
+done < m.list
+
+cat > tail << EOF
+	</Folder>
+   </Document>
+</kml>
+<!--* <EOR>> -->
+EOF
+
+cat head body tail > ${REGION}.kml
+rm -f ${REGION}.kmz
+zip  ${REGION}.kmz ${REGION}.kml *.png
+
+#####
+#	clean up
+#####
+rm -f head body tail *.eps
+rm -f *.png
+rm -f m.list mech.dat
+rm -f gmt.conf gmt.history
+rm -f .gmtdefaults4
+rm -f .gmtcommands4
+
+rm -f regime
+rm -f red green blue lunk
+rm -f t *.kml

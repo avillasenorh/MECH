@@ -1,0 +1,94 @@
+Introduction
+
+     These are some scripts to make KMZ files for use with google earth
+     All scripte use the file named Mech.list which is created for each moment tensor in the
+     HTML.REG directory as mechlist.proto
+     
+     As I do moment tensor, I essentially do a
+	     cat DATETIME/HTML.REG/mechlist.proto >> Mech.list
+     The attached Mech.list is what I currently have for Europe
+     
+     The scripts work by creating one kml file for all events  and an image for each event. 
+     These are then zip'ed together using the program 'zip'
+
+-----
+Format of Mech.list
+
+     This Mech.list is hased on what I created for Italy  abnd then extended for Europe.
+     The lines are
+     
+     20081001_224737  42.590   13.287 15.0 3.20 320  75  -90 0.5305
+     20081223_152421  44.544   10.345 22.0 5.21  95  55   80 0.7429
+     ..............
+     20220422_210750 43.04   18.19   23.0 5.58 285 25   80 0.6578
+     20220424_042755 43.05   18.15   23.0 4.65 150 70  -75 0.7271
+     
+     and this is what I have for the North America RMT's
+     
+     20230322_095913  58.11 -137.54  20.0 3.75 250 65   15 WEB WUS SLU
+     20230322_143405  58.19 -137.36  19.0 3.65 250 60   15 WEB WUS SLU
+     
+     There are 9 fields for Europe and 11 fields for NA.
+     For Eurpe we have
+     
+     DATE_TIME LATITUDE LONGITUDE RMT_DEPTH MW STK DIP RAKE GOODNESS_OF_FIT
+     
+     for NA  we have
+     
+     DATE_TIME LATITUDE LONGITUDE RMT_DEPTH MW STK DIP RAKE RMT_DOCUMENTATION VELOCITY_MODEL RMT_SOURCE
+     
+     In bash scripts there is  the following
+     
+     cp Mech.list > m.list   # never mess around with the master data file
+     while read YEARDATE LAT LON H MW STK DIP RAKE CITATION
+     do
+     ...
+     done < m.list
+     
+     Thus I am interested only in the first 9 fields.
+
+-----
+Basis of the script.  
+     I believe I did an epicenter search on the NEIC page and got the output in KMZ, 
+     and then realied the KMZ was a zip of KML files, which I then looked at. 
+     There were not ChatBots at the time.
+
+     The scripts use the programs 'zip' and the ImageMagick 'convert'. The latter is used
+     to convert the EPS files from GMT to PNG for the web.
+
+     The scripts do the following
+        1.  define a unique name for the KMZ file, e.g., eumech
+        2.  create a KML file by
+
+            cat head body tail > eumech.kml
+
+	3a. the head has a title and an initial view when the KMZ is opened. Here I set it to
+            40N 10E (sardinia onece belonged to Barcelona)
+
+        3b. body     For each event I use GMT psmeca to make a beachball plot. I also create the
+            information that appears when you click on the beach ball.
+
+            You can comment out some lines, e.g., the one for CITATION and the one for
+	    web site.
+        3c. tail  - this just completes the KML
+
+    
+-----
+SCRIPTS:
+
+     DOALLFM4  - beachball plot using GMT4 which is what I have on my older machines
+     DOALLFM5  - beachball plot using GMT5+
+		I was able to test this script since I have a very new Linux system 
+		running under VirtualBox (goo old Intel) which has GMT 6.3.0
+
+		These scripts take a long time to run for my NA RMT's since
+		I generate the beachballs for each event for each update of the KMZ. This
+		take a while, but makes the logic a bit simpler.
+
+		For your events, or ev en if you try to plot all IGN's solutions,
+		it will not take much time since  there may not be as many.
+
+		These scripts have many comment lines
+
+     DOCAXIS4   GMT plot directin of maximum compressive stress axis colored
+     EOCAXIS5   by type of faulting. There are GMT4 and GMT5+ versions

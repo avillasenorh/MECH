@@ -9,6 +9,7 @@ nav:
         - QC data: scripts/qc.md
         - Waveform inversion: scripts/wf.md
         - Spectral amplitudes: scripts/spec.md
+        - Create KMZ files: scripts/kmz.md
     - Tutorials:
         - Data from SDS: tutorials.md
 

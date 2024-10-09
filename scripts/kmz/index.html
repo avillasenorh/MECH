@@ -4,22 +4,22 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="shortcut icon" href="img/favicon.ico" />
-    <title>Index - Regional focal mechanisms</title>
-    <link rel="stylesheet" href="css/theme.css" />
-    <link rel="stylesheet" href="css/theme_extra.css" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Create KMZ files - Regional focal mechanisms</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Index";
-        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_name = "Create KMZ files";
+        var mkdocs_page_input_path = "scripts/kmz.md";
         var mkdocs_page_url = null;
       </script>
     
-    <script src="js/jquery-3.6.0.min.js" defer></script>
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
-      <script src="js/html5shiv.min.js"></script>
+      <script src="../../js/html5shiv.min.js"></script>
     <![endif]-->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
       <script>hljs.initHighlightingOnLoad();</script> 
@@ -31,9 +31,9 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-          <a href="." class="icon icon-home"> Regional focal mechanisms
+          <a href="../.." class="icon icon-home"> Regional focal mechanisms
         </a><div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
       <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
@@ -41,30 +41,30 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption"><span class="caption-text">Home</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../..">Index</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Scripts</span></p>
               <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" href=".">Index</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../intro/">Introduction</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../data/">Extract data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../qc/">QC data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wf/">Waveform inversion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../spec/">Spectral amplitudes</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Create KMZ files</a>
     <ul class="current">
     </ul>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">Scripts</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="scripts/intro/">Introduction</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="scripts/data/">Extract data</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="scripts/qc/">QC data</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="scripts/wf/">Waveform inversion</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="scripts/spec/">Spectral amplitudes</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="scripts/kmz/">Create KMZ files</a>
-                  </li>
-              </ul>
               <p class="caption"><span class="caption-text">Tutorials</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="tutorials/">Data from SDS</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Data from SDS</a>
                   </li>
               </ul>
       </div>
@@ -74,14 +74,14 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
       <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href=".">Regional focal mechanisms</a>
+          <a href="../..">Regional focal mechanisms</a>
         
       </nav>
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-          <li>Home &raquo;</li><li>Index</li>
+    <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Scripts &raquo;</li><li>Create KMZ files</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -91,18 +91,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="regional-focal-mechanisms">Regional Focal Mechanisms</h1>
-<p>This repository contains scripts to run Herrmann's focal mechanism codes
-described in Herrmann <em>et al.</em> (2011)</p>
-<p>Reference:</p>
-<p>Herrmann, R. B.; Benz, H.; Ammon, C. J. Monitoring the Earthquake Source Process
-in North America. Bulletin of the Seismological Society of America 2011, 101 (6),
-2609–2625. <a href="https://doi.org/10.1785/0120110095"></a>.</p>
+                <h1 id="create-kmz-files">Create KMZ files</h1>
+<p>Scripts to create KMZ files from list of focal mechanisms</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="scripts/intro/" class="btn btn-neutral float-right" title="Introduction">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../spec/" class="btn btn-neutral float-left" title="Spectral amplitudes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../tutorials/" class="btn btn-neutral float-right" title="Data from SDS">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -125,16 +121,18 @@ in North America. Bulletin of the Seismological Society of America 2011, 101 (6)
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
+      <span><a href="../spec/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
-      <span><a href="scripts/intro/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+      <span><a href="../../tutorials/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
-    <script>var base_url = '.';</script>
-    <script src="js/theme_extra.js" defer></script>
-    <script src="js/theme.js" defer></script>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
-      <script src="search/main.js" defer></script>
+      <script src="../../search/main.js" defer></script>
     <script defer>
         window.onload = function () {
             SphinxRtdTheme.Navigation.enable(true);
